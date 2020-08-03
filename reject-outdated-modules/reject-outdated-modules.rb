@@ -14,7 +14,6 @@ ORG = "ministryofjustice"
 TF_MODULE_REGEX = "source.*github.com\\/#{ORG}\\/cloud-platform-terraform-.*"
 ModuleUsage = Struct.new(:module, :version, :latest)
 
-
 gh = GithubClient.new
 
 def tf_files_in_pr(gh)
