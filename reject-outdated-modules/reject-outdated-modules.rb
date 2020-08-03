@@ -16,12 +16,19 @@ ModuleUsage = Struct.new(:module, :version, :latest)
 
 gh = GithubClient.new
 
+# Return a list of all module usage (module, version)
+def in_use(gh)
+  modules_used()
+    .flatten
+end
+
+
 def tf_files_in_pr(gh)
   gh.files_in_pr
     .grep(/\.(tf)$/)
 end
 
-def modules_used()
+def modules_used(gh)
   modules = []
   tf_files_in_pr(gh).each do |file|
     stdout, _stderr, _status = Open3.capture3("grep #{TF_MODULE_REGEX} #{file}")
@@ -41,13 +48,6 @@ def module_usage(line)
 end
 
 
-
-# Return a list of all module usage (module, version)
-def in_use
-    modules_used()
-      .flatten
-end
-
 # Takes all the ModuleUsage objects that exist, reduces to unique
 # module names, and returns a hash: { module name => latest version }
 def module_latest_releases(modules_in_use)
@@ -65,9 +65,9 @@ def latest_version(module_name)
     stdout
 end
 
-def out_of_date_modules
+def out_of_date_modules(gh)
     # binding.pry
-    modules_in_use = in_use
+    modules_in_use = in_use(gh)
     latest_releases = module_latest_releases(in_use)
   
     out_of_date_list = []
@@ -86,7 +86,8 @@ def out_of_date_modules
 
 ##################################################
 
-modules=out_of_date_modules()
+modules=out_of_date_modules(gh)
+
 binding.pry
 if modules.size > 1
   
