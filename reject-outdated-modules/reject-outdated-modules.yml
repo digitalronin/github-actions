@@ -1,0 +1,6 @@
+name: Reject outdated modules
+description: Reject a PR if it uses any module that is not at the latest release version.
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
