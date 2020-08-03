@@ -10,7 +10,6 @@ require "octokit"
 require File.join(File.dirname(__FILE__), "github")
 
 
-NAMESPACE_DIR = "."
 ORG = "ministryofjustice"
 TF_MODULE_REGEX = "source.*github.com\\/#{ORG}\\/cloud-platform-terraform-.*"
 ModuleUsage = Struct.new(:module, :version, :latest)
@@ -48,12 +47,6 @@ end
 def in_use
     modules_used()
       .flatten
-end
-
-def namespaces
-Dir["#{NAMESPACE_DIR}/*"]
-    .find_all { |dir| FileTest.directory?(dir) }
-    .map { |dir| File.basename(dir) }
 end
 
 # Takes all the ModuleUsage objects that exist, reduces to unique
@@ -97,13 +90,11 @@ def out_of_date_modules
 modules=out_of_date_modules()
 binding.pry
 if modules.size > 1
-  namespace_list = namespaces.map { |n| "  * #{n}" }.join("\n")
-
+  
   message = <<~EOF
-    This PR affects multiple namespaces
-     #{namespace_list}
-     Please submit a separate PR for each namespace.
-
+    This PR uses obsolete terraform modules.
+     #{modules}
+     Please submit correct your PR to use the latest version.
   EOF
 
   gh.reject_pr(message)
