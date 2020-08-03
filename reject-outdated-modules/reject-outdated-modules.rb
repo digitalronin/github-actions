@@ -51,10 +51,13 @@ end
 # Takes all the ModuleUsage objects that exist, reduces to unique
 # module names, and returns a hash: { module name => latest version }
 def module_latest_releases(modules_in_use)
-    modules_in_use
-      .map { |mu| mu.module }
-      .uniq
-      .each_with_object({}) { |mod, hash| hash[mod] = latest_version(mod); }
+  modules_in_use
+    .map { |mu| mu.module }
+    .uniq
+    .each_with_object({}) { |mod, hash| hash[mod] = latest_version(mod); }
+rescue NoMethodError # we get this if we call 'dig' on nil
+  # Experimental modules may not have any releases, so just return nothing
+  nil
 end
 
 # Takes a module name, returns the value of the last release defined in the
@@ -68,7 +71,7 @@ end
 def out_of_date_modules(gh)
     # binding.pry
     modules_in_use = in_use(gh)
-    latest_releases = module_latest_releases(modules_in_use)
+    latest_releases = module_latest_releases(in_use(gh))
   
     out_of_date_list = []
   
