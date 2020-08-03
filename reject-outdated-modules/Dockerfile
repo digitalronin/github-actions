@@ -5,7 +5,7 @@ FROM ministryofjustice/cloud-platform-tools:1.4
 RUN gem install faraday --version 0.9
 RUN gem install octokit
 
-COPY reject-multi-namespace-prs.rb /reject-multi-namespace-prs.rb
+COPY reject-outdated-modules.rb /reject-outdated-modules.rb
 COPY github.rb /github.rb
 
 ENTRYPOINT ["/reject-outdated-modules.rb"]
