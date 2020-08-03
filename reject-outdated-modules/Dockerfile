@@ -8,4 +8,6 @@ RUN gem install octokit
 COPY reject-outdated-modules.rb /reject-outdated-modules.rb
 COPY github.rb /github.rb
 
+RUN chmod +x /reject-outdated-modules.rb
+
 ENTRYPOINT ["/reject-outdated-modules.rb"]
