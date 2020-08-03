@@ -68,7 +68,7 @@ end
 def out_of_date_modules(gh)
     # binding.pry
     modules_in_use = in_use(gh)
-    latest_releases = module_latest_releases(in_use)
+    latest_releases = module_latest_releases(modules_in_use)
   
     out_of_date_list = []
   
