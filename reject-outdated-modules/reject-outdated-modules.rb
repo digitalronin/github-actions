@@ -18,7 +18,7 @@ gh = GithubClient.new
 
 # Return a list of all module usage (module, version)
 def in_use(gh)
-  modules_used()
+  modules_used(gh)
     .flatten
 end
 
